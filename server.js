@@ -3,6 +3,13 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const session = require('express-session');
+const bcrypt = require('bcrypt');
+
+
+const hashedString = bcrypt.hashSync('Pizza', bcrypt.genSaltSync(10));
+
+bcrypt.compareSync('yourGuessHere', hashedString);
+
 
 // Middleware 
 app.use(
@@ -14,6 +21,18 @@ app.use(
 );
 
 // Routes / Controllers
+
+app.get('/hashed', (req, res) => {
+    const hashedString = bcrypt.hashSync('example', bcrypt.genSaltSync(10));
+    res.send(hashedString);
+})
+
+app.get('/compare', (req, res) => {
+	const hashedString = bcrypt.hashSync('example', bcrypt.genSaltSync(10));
+	const isSameString = bcrypt.compareSync('example', hashedString);
+	res.send(isSameString);
+});
+
 app.get('/any', (req, res) => {
     req.session.anyProperty = 'any value';
     res.send('This is the route that sets the value of req.session.anyProperty');
@@ -46,6 +65,7 @@ app.get('/destroy', (req, res) => {
         }
     });
 });
+
 
 // Listener
 const PORT = process.env.PORT;
