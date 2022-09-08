@@ -35,6 +35,18 @@ app.get('/update', (req, res) => {
     res.send('This is the route that updates req.session.anyProperty');
 });
 
+app.get('/destroy', (req, res) => {
+    req.session.destroy((error) => {
+        if (error) {
+            res.send(error);
+        } else {
+            res.send({
+                success: true
+            });
+        }
+    });
+});
+
 // Listener
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`server is listening on port: ${PORT}`));
